@@ -1,4 +1,6 @@
 *
 !.gitignore
-!haskell/
-!c/*.c
+!/haskell/
+!/haskell/**
+!/c/
+!/c/*.c
