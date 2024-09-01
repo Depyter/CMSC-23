@@ -27,7 +27,8 @@ summation n
 
 compose :: (Int -> Int) -> (Int -> Int) -> (Int -> Int)
 -- Take the input of function g and use it in function f
-compose f g = f.g
+-- You can also just do f.g to compose functions
+compose f g = \x -> f (g x)
 
 subtractMaker :: Int -> (Int -> Int)
 subtractMaker x = \y -> y - x
