@@ -36,7 +36,7 @@ subtractMaker x = \y -> y - x
 applyNTimes :: (Int -> Int) -> Int -> Int -> Int
 -- If n is zero, return x, otherwise recursively call the function
 -- with the new value of x resulting from (f x) and decreased value of n
--- Importantly, only when n is 0 does it return an int.
+-- Importantly, only when n is 1 does it return an int.
 applyNTimes f x n
-    | n == 0 = x
+    | n == 1 = x
     | otherwise = applyNTimes f (f x) (n - 1)
