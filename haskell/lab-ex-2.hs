@@ -38,5 +38,5 @@ applyNTimes :: (Int -> Int) -> Int -> Int -> Int
 -- with the new value of x resulting from (f x) and decreased value of n
 -- Importantly, only when n is 1 does it return an int.
 applyNTimes f x n
-    | n == 1 = x
+    | n <= 0 = x 
     | otherwise = applyNTimes f (f x) (n - 1)
