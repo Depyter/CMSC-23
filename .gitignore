@@ -4,5 +4,5 @@
 !/haskell/**
 !/c/
 !/c/*.c
+!/prolog/
 !/prolog/**
-!/prolog/*.pl
