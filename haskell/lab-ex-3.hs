@@ -1,4 +1,10 @@
 
+candidateFactors :: Int -> [Int]
+candidateFactors x = [2..((ceiling.sqrt.fromIntegral) x)]
+
+isDivisible :: Int -> Int-> Bool
+isDivisible x y = (mod x y) == 0
+
 myMap :: (a -> b) -> [a] -> [b]
 -- Function that applies a function to a list
 myMap f l
@@ -44,6 +50,16 @@ myZip :: (a -> b -> c) -> [a] -> [b] -> [c]
 myZip f l m
     | null l = []
     | otherwise = f (head l) (head m) : myZip f (tail l) (tail m)
+
+composeAll :: [a -> a] -> (a -> a)
+composeAll fl
+    | null fl = id
+    | otherwise = head fl . composeAll (tail fl)
+
+isPrime :: Int -> Bool
+isPrime x
+    | x <= 1 = False
+    | otherwise = any (isDivisible x) (candidateFactors x)
 
 sumOfSquares :: Num a => [a] -> a
 sumOfSquares l = myFoldl (+) (myMap (\x -> x * x) l) 0
