@@ -59,7 +59,8 @@ composeAll fl
 isPrime :: Int -> Bool
 isPrime x
     | x <= 1 = False
-    | otherwise = any (isDivisible x) (candidateFactors x)
+    | x == 2 = True
+    | otherwise = all (not . isDivisible x) (candidateFactors x)
 
 sumOfSquares :: Num a => [a] -> a
 sumOfSquares l = myFoldl (+) (myMap (\x -> x * x) l) 0

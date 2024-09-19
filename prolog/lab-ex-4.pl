@@ -1,27 +1,28 @@
-female('Scarlet').
-female('Mrs. White').
-female('Mrs. Peacock').
-female('Dr. Orchid').
+female(scarlet).
+female(white).
+female(peacock).
+female(orchid).
 
-male('Prof. Plum'). 
-male('Colonel Mustard').
-male('Green').
+male(plum). 
+male(mustard).
+male(green).
 
-hates('Scarlet','Green').
-hates('Green','Scarlet').
-hates('Prof. Plum','Mrs. White').
-hates('Mrs. White','Prof. Plum').
-hates('Colonel Mustard','Prof. Plum').
-hates('Colonel Mustard', Person) :- female(Person).
+hates(scarlet, green).
+hates(green, scarlet).
+hates(plum, white).
+hates(white, plum).
+hates(mustard, plum).
+hates(mustard, Person) :- female(Person).
 
-likes('Scarlet','Dr. Orchid').
-likes('Mrs. Peacock','Dr. Orchid').
-likes('Dr. Orchid', 'Mrs. Peacock').
-likes('Scarlet','Mrs. White').
-likes('Scarlet','Prof. Plum').
-likes('Prof. Plum', ' Scarlet').
+likes(scarlet, orchid).
+likes(peacock, orchid).
+likes(orchid, peacock).
+likes(scarlet, white).
+likes(scarlet, plum).
+likes(plum, scarlet).
 
-likes('Prof. Plum', Person) :- hates('Colonel Mustard', Person).
+likes(plum, Person) :- hates(mustard, Person).
+
 enemies(X, Y) :- hates(X, Y), hates(Y, X).
 friends(X, Y) :- likes(X, Y), likes(Y, X).
-friends(X, Z) :- enemies(X,Y), enemies(Y,Z).
+friends(X, Z) :- enemies(X, Y), enemies(Y, Z).
