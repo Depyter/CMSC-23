@@ -18,6 +18,8 @@ class BorrowableItem(ABC):
     def commonName(self) -> str:
         pass
 
+
+
 class Book(BorrowableItem):
     def __init__(self, bookId:int, title:str, author:str, publishDate:date, pages: list[Page]):
         self.__bookId = bookId
@@ -32,45 +34,19 @@ class Book(BorrowableItem):
     def commonName(self) -> str:
         return "Borrowed Item:" + self.__title + " by " + self.__author
 
-class Periodical(BorrowableItem):
-    def __init__(self, periodical:int, title:str, author:str, publishDate:date, pages: list[Page]):
-        self.__periodicalId = periodical
-        self.__title = title
-        self.__author = author
-        self.__publishDate = publishDate
-        self.__pages = pages
-    
-    def uniqueItemId(self) -> int:
-        return self.__periodicalId
-    
-    def commonName(self) -> str:
-        return f"{self.__title} issue: {self.__publishDate}"
-    
-class PC(BorrowableItem):
-    def  __init__(self, pcID: int):
-        self.__pcID = pcID
-    
-    def uniqueItemId(self) -> int:
-        return self.__pcID
-    
-    def commonName(self) -> str:
-        return f"PC{self.__pcID}"
-    
+
 class LibraryCard:
     def __init__(self, idNumber: int, name: str, borrowedItems: dict[BorrowableItem,date]):
         self.__idNumber = idNumber
         self.__name = name
         self.__borrowedItems = borrowedItems
-
     def borrowItem(self,book:BorrowableItem, date:date):
         self.__borrowedItems[book] = date
-
     def borrowerReport(self) -> str:
         r:str = self.__name + "\n"
         for borrowedItem in self.__borrowedItems:
             r = r + borrowedItem.commonName() + ", borrow date:" + str(self.__borrowedItems[borrowedItem]) + "\n"
         return r
-    
     def returnItem(self, b:BorrowableItem):
         if self.__borrowedItems[b]:
             del self.__borrowedItems[b]
@@ -96,7 +72,9 @@ class LibraryCard:
 
     def penalty(self, b:BorrowableItem, today:date) -> float:
         item_due_date = self.due_date(self.__borrowedItems[b], b)
-        days_overdue = daysBetween(item_due_date, today)
+        if today <= item_due_date:
+            return 0.0
+        days_overdue = daysBetween(today, item_due_date)
         if days_overdue > 0:
             return days_overdue * 3.5
         return 0.0
@@ -107,4 +85,26 @@ class LibraryCard:
         for item in due_items:
             total_penalty += self.penalty(item,today)
         return total_penalty
+
+class Periodical(BorrowableItem):
+    def __init__(self, periodical:int, title:str, issue:date, pages: list[Page]):
+        self.__periodicalID = periodical
+        self.__title = title
+        self.__issue = issue
+        self.__pages = pages
     
+    def uniqueItemId(self) -> int:
+        return self.__periodicalId
+    
+    def commonName(self) -> str:
+        return f"{self.__title} issue: {self.__issue}"
+    
+class PC(BorrowableItem):
+    def  __init__(self, pcID: int):
+        self.__pcID = pcID
+    
+    def uniqueItemId(self) -> int:
+        return self.__pcID
+    
+    def commonName(self) -> str:
+        return f"PC{self.__pcID}"
