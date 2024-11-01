@@ -22,6 +22,7 @@ class bank_account(ABC):
         if transactions is not None:
             for transaction in transactions:
                 account_number, balance, transaction_type, amount, new_balance, time_of_transaction = transaction
+                print("---------------------------")
                 print(f"Account Number: {account_number}")
                 print(f"Balance: {balance}")
                 print(f"Transaction Type: {transaction_type}")

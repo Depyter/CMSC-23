@@ -36,6 +36,7 @@ class accountManager(account_change):
             if account._dueForDeactivation():
                 account.status = False
 
+    # Return the corresponding object
     def __create_account_object(self, owner, account_number, status, balance, acctype):
         if acctype == 'payroll':
             return payrollAcc(owner, account_number, status, balance)
@@ -56,6 +57,7 @@ class accountManager(account_change):
 
     def __deleteAccount(self, accid):
         if accid in self.bankaccounts:
+            # Balance should be 0 to delete an account
             if self.bankaccounts[accid].balance != 0:
                 print(f"Cannot delete account with {accid} due to non-zero balance.")
 
@@ -63,6 +65,7 @@ class accountManager(account_change):
                 db = Database()
                 db.delete_account_from_db(accid)
 
+                # If current account selected is being deleted, change it to none
                 if self.currentaccount and self.currentaccount.account_number == accid:
                     self.currentaccount = None
                 del self.bankaccounts[accid]
@@ -82,6 +85,7 @@ class accountManager(account_change):
             print(f"Enter a valid account number.")
             return
         
+    # Call the subclass implementation of transfer
     def __transferFunds(self, toAccount, amount):
         if self.currentaccount.transfer(toAccount, amount):
             print(f"Transferred {amount} succfessfully to {toAccount}")
@@ -104,6 +108,8 @@ class accountManager(account_change):
     def __showCurrentAccount(self):
         if self.currentaccount is not None:
             self.__showAccountinformation(self.currentaccount.account_number, self.currentaccount)
+        else: 
+            print("Please select an account to access.")
 
     def __accountReport(self):
         if self.currentaccount:
@@ -128,9 +134,13 @@ class accountManager(account_change):
                 case '1':
                     amount = self.__get_valid_amount("Enter amount to deposit: ")
                     self.currentaccount.deposit(amount)
+                    print(f"Successfully deposited {amount}")
                 case '2':
                     amount = self.__get_valid_amount("Enter amount to withdraw: ")
-                    self.currentaccount._withdraw(amount)
+                    if self.currentaccount._withdraw(amount):
+                        print(f"Successfully withdrawn {amount}")
+                    else:
+                        print("Withdraw failed. Please enter a valid amount.")
                 case '3':
                     if isinstance(self.currentaccount, transferable):
                         toAccount = self.__get_valid_account_number("Enter account number to transfer funds to: ")
