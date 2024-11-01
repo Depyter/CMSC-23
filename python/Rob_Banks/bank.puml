@@ -1,21 +1,21 @@
-@startuml
+@startuml Banking
 
 abstract class "Bank Account" {
     #String owner
     +Int account_number
-    #Bool Status
-    #Int Balance
-    +deposit(): Bool
-    #withdraw(): Bool
-    #getBalance(): Int
+    #Bool status
+    #Float balance
+    +deposit(amount: Float): Bool
+    #_withdraw(amount: Float): Bool
+    #getBalance(): Float
     #getStatus(): Bool
-    #getAccountnumber(): Int
-    #getAccountname(): String
+    #getAccountNumber(): Int
+    #getAccountName(): String
     #dueForDeactivation(): Bool
 }
 
 interface Transferable {
-    #transfer(toAccount, amount): Bool
+    +transfer(toAccount: Int, amount: Float): Bool
 }
 
 class Payroll {
@@ -23,9 +23,13 @@ class Payroll {
 }
 
 class Debit {
+    #String acctype = 'debit'
 }
 
 class Credit {
+    #String acctype = 'credit'
+    +Float credit_limit
+    +Float interest_rate
 }
 
 class User {
@@ -35,33 +39,41 @@ class User {
     #login(): void
     #logout(): void
 }
-'The account manager allows the user to create an account, use specific accounts etc.
-'We can think of it as the app
-class Accountmanager {
+
+class AccountManager {
     #Int numaccounts
-    #Bank Account accounts[]
-    -openNewAccount(): void
-    -deleteAccount():void
-    -accesssAccount(): void
-    -transferFunds(): void
-    -allAccounts(): void
+    #Bank Account bankaccounts[]
+    -openNewAccount(owner: String, acctype: String): void
+    -deleteAccount(account_number: Int): void
+    -accessAccount(account_number: Int): void
+    -transferFunds(toAccount: Int, amount: Float): void
+    -showAllAccounts(): void
+    -showCurrentAccount(): void
 }
 
-interface deactivation {
-    #deactivateAccount(): void
+package Bank <<Database>> {
+    class Database {
+        +add_account_to_db(owner, status, balance, acc_type): Int
+        +delete_account_from_db(acc_num): Bool
+        +update__bal(acc_num, new_balance, trans_type, amount): Bool
+        +access_account_db(acc_num): List
+        +add_to_transaction_history(acc_num, balance, trans_type, amount): Bool
+    }
 }
 
-package foo6 <<Cloud>> {
-  class BankServer
+interface account_change {
+    +monthlyChanges(): void
 }
 
-deactivation <|.. Accountmanager
-Accountmanager <|-- Transferable
-User *-- Accountmanager
-Accountmanager *-- "Bank Account"
+Database <|-- AccountManager
+account_change <|.. AccountManager
+AccountManager <|-- Transferable
+User *-- AccountManager
+AccountManager *-- "Bank Account"
 "Bank Account" <|-- Payroll
 "Bank Account" <|-- Debit
 "Bank Account" <|-- Credit
 Transferable <|.. Credit
 Transferable <|.. Debit
+
 @enduml

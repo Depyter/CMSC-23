@@ -6,7 +6,7 @@ class payrollAcc(bank_account):
         super().__init__(owner, account_number, status, balance)
         self.acctype = 'payroll'
 
-    def deposit(self, amount):
+    def deposit(self, amount: int):
         self.balance += amount
         super().update_to_db(self.account_number, self.balance - amount,'deposit', amount)
         return True 

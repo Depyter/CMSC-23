@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from database import update_db, balance_report
+from database import Database
 # Define an abstract class to access these accounts
 class bank_account(ABC):
 
@@ -13,11 +13,13 @@ class bank_account(ABC):
     @classmethod
     # Call the update db function to update the transaction history table and bank account table
     def update_to_db(self, account_number: int, balance: int, transaction_type: str, amount: int):
-        update_db(account_number, balance, transaction_type, amount)
+        db = Database()
+        db.update_db(account_number, balance, transaction_type, amount)
     
     def balance_report(self):
-        transactions = balance_report(self.account_number)
-        if transactions:
+        db = Database()
+        transactions = db.balance_report(self.account_number)
+        if transactions is not None:
             for transaction in transactions:
                 account_number, balance, transaction_type, amount, new_balance, time_of_transaction = transaction
                 print(f"Account Number: {account_number}")

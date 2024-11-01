@@ -1,5 +1,5 @@
 from bankaccount import bank_account, transferable  
-from database import update_account_bal, access_account_db
+from database import Database
 class creditAcc(bank_account, transferable):
     
     # use the init of bankaccount but add more info
@@ -9,7 +9,7 @@ class creditAcc(bank_account, transferable):
         self.interest_rate = interest_rate
         self.acctype = 'credit'
 
-    def deposit(self, amount):
+    def deposit(self, amount: int):
         self.balance -= amount
         super().update_to_db(self.account_number, self.balance + amount, 'deposit', - amount)
         return True 
@@ -30,11 +30,13 @@ class creditAcc(bank_account, transferable):
             return False
 
         # Get the account from database, returns [balance, acctype]
-        account_data = access_account_db(toAccount)
+        db = Database()
+        account_data = db.access_account_db(toAccount)
         if not account_data:
             return False  # Handle case where account is not found
 
-        account_balance, account_type = account_data 
+        account_balance, account_type = account_data
+        self.balance += amount
 
         # Reduce balance if account type is credit
         if account_type == 'credit':
