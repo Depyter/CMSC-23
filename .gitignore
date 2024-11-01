@@ -8,3 +8,5 @@
 !/prolog/**
 !/python/
 !/python/**
+python/Rob_Banks/__pycache__/**
+python/Rob_Banks/.DS_Store

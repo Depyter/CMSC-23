@@ -1,0 +1,67 @@
+@startuml
+
+abstract class "Bank Account" {
+    #String owner
+    +Int account_number
+    #Bool Status
+    #Int Balance
+    +deposit(): Bool
+    #withdraw(): Bool
+    #getBalance(): Int
+    #getStatus(): Bool
+    #getAccountnumber(): Int
+    #getAccountname(): String
+    #dueForDeactivation(): Bool
+}
+
+interface Transferable {
+    #transfer(toAccount, amount): Bool
+}
+
+class Payroll {
+    #String acctype = 'payroll'
+}
+
+class Debit {
+}
+
+class Credit {
+}
+
+class User {
+    +Bool authenticated
+    -String username
+    -String password
+    #login(): void
+    #logout(): void
+}
+'The account manager allows the user to create an account, use specific accounts etc.
+'We can think of it as the app
+class Accountmanager {
+    #Int numaccounts
+    #Bank Account accounts[]
+    -openNewAccount(): void
+    -deleteAccount():void
+    -accesssAccount(): void
+    -transferFunds(): void
+    -allAccounts(): void
+}
+
+interface deactivation {
+    #deactivateAccount(): void
+}
+
+package foo6 <<Cloud>> {
+  class BankServer
+}
+
+deactivation <|.. Accountmanager
+Accountmanager <|-- Transferable
+User *-- Accountmanager
+Accountmanager *-- "Bank Account"
+"Bank Account" <|-- Payroll
+"Bank Account" <|-- Debit
+"Bank Account" <|-- Credit
+Transferable <|.. Credit
+Transferable <|.. Debit
+@enduml
