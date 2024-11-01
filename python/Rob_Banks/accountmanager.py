@@ -98,6 +98,7 @@ class accountManager(account_change):
         print(f"Owner: {account.owner}")
         print(f"Balance: {account.balance}")
         print(f"Account Type: {account.acctype}")
+        print(f"Account status: {'Active'if account.status else 'Inactive'}")
         print("---------------------------")
 
     # Show all accounts managed by the current instance of account manager
