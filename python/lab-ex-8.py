@@ -1,4 +1,32 @@
 from datetime import date,timedelta
+from abc import ABC, abstractmethod
+
+# First create an interface class
+# Make it so that express delivery and standard delivery 
+# are CONTRACTUALLY obligated to implement all methods in the interface
+class Delivery(ABC):
+
+    # Enforce subclasses to have an init method with location and delivery status
+    @abstractmethod
+    def __init__(self, location: str):
+        self.__location = location
+        self.__deliveryStatus = "Processing"
+
+    @abstractmethod
+    def estimatedDeliveryDate(self) -> date:
+        pass
+
+    @abstractmethod
+    def deliveryFee(self) -> float:
+        pass
+
+    @abstractmethod
+    def deliveryDetails(self) -> str:
+        pass
+
+    @abstractmethod
+    def changeDeliveryStatus(self) -> None:
+        pass
 
 class Order:
     def __init__(self,productName:str, productPrice:float):
@@ -9,10 +37,25 @@ class Order:
     def price(self) -> float:
         return self.__productPrice
 
-class StandardDelivery:
+class ExpressDelivery(Delivery):
     def __init__(self,location:str):
-        self.__location = location
-        self.__deliveryStatus = "Processing"
+        # Call the parent class implementation 
+        super().__init__(location)
+
+    def deliveryDetails(self) -> str:
+        r = "EXPRESS DELIVERY\nDELIVER TO:%s\nDELIVERY STATUS: %s\nDELIVERY FEE: P%.2f" % (self.__location,self.__deliveryStatus,self.deliveryFee())
+        return r
+    def deliveryFee(self) -> float:
+        return 1000
+    def estimatedDeliveryDate(self,processDate:date) -> float:
+        return processDate + timedelta(days = 1)
+    def changeDeliveryStatus(self,newStatus:str):
+        self.__deliveryStatus = newStatus
+
+class StandardDelivery(Delivery):
+    def __init__(self,location:str):
+        super().__init__(location)
+
     def deliveryDetails(self) -> str:
         r = "STANDARD DELIVERY\nDELIVER TO:%s\nDELIVERY STATUS: %s\nDELIVERY FEE: P%.2f" % (self.__location,self.__deliveryStatus,self.deliveryFee())
         return r
@@ -24,10 +67,14 @@ class StandardDelivery:
         self.__deliveryStatus = newStatus
 
 class Shipment:
-    def __init__(self, orderList:[Order], processDate: date, location):
+    def __init__(self, orderList:list[Order], processDate: date, location):
         self._orderList = orderList
         self._processDate = processDate
-        self._delivery = StandardDelivery(location)
+        self._delivery = self.newDelivery(location)
+
+    @abstractmethod
+    def newDelivery(self, location):
+        return StandardDelivery(location)
 
     def totalPrice(self) -> str:
         t = 0.0
@@ -46,6 +93,11 @@ class Shipment:
         r += "ESTIMATED DELIVERY DATE: " + str(self._delivery.estimatedDeliveryDate(self._processDate))
         return r
 
-#o = [Order("Surface Pro 7",40000),Order("Zzzquil",900)]
-#s = Shipment(o,date(2019,11,1),"Cebu City")
-#print(s.shipmentDetails())
+class ExpressShipment(Shipment):
+
+    def newDelivery(self, location):
+        return ExpressDelivery(location)
+     
+o = [Order("Surface Pro 7",40000),Order("Zzzquil",900)]
+s = ExpressShipment(o,date(2019,11,1),"Cebu City")
+print(s.shipmentDetails())
