@@ -7,10 +7,10 @@ from abc import ABC, abstractmethod
 class Delivery(ABC):
 
     # Enforce subclasses to have an init method with location and delivery status
-    @abstractmethod
-    def __init__(self, location: str):
-        self.__location = location
-        self.__deliveryStatus = "Processing"
+    #@abstractmethod
+    #def __init__(self, location: str):
+    #    self.__location = location
+    #    self.__deliveryStatus = "Processing"
 
     @abstractmethod
     def estimatedDeliveryDate(self) -> date:
