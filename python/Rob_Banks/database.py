@@ -48,7 +48,7 @@ class Database:
         # Ensure a table exists otherwise create it
         cur.execute("""
         CREATE TABLE IF NOT EXISTS registered_bank_accounts(
-            owner TEXT, 
+            owner TEXT, ∏
             account_number INTEGER PRIMARY KEY, 
             status INTEGER, 
             balance REAL, 
